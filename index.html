@@ -1,195 +1,35 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USD KAGET!</title>
-    <!-- Tailwind CSS CDN untuk styling yang cepat dan responsif -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif; /* Menggunakan font Inter */
-            background-color: #f0f2f5; /* Latar belakang abu-abu muda */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
-        /* Custom styles jika diperlukan, di sini kita prioritaskan Tailwind */
-        .gradient-button {
-            background-image: linear-gradient(to right, #007bff 0%, #0056b3  51%, #007bff  100%);
-            text-align: center;
-            text-transform: uppercase;
-            transition: 0.5s;
-            background-size: 200% auto;
-            color: white;
-            box-shadow: 0 0 20px #eee;
-            border-radius: 10px;
-            display: block;
-        }
-        .gradient-button:hover {
-            background-position: right center; /* change the direction of the change here */
-            color: #fff;
-            text-decoration: none;
-        }
-        .fade-in {
-            animation: fadeIn 1s ease-in-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        /* Styling untuk modal (message box) */
-        .modal {
-            display: none; /* Sembunyikan secara default */
-            position: fixed; /* Tetap di posisi yang sama meskipun scroll */
-            z-index: 1000; /* Letakkan di atas konten lain */
-            left: 0;
-            top: 0;
-            width: 100%; /* Lebar penuh */
-            height: 100%; /* Tinggi penuh */
-            overflow: auto; /* Aktifkan scroll jika konten terlalu besar */
-            background-color: rgba(0,0,0,0.4); /* Latar belakang semi-transparan */
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            position: relative;
-        }
-
-        .close-button {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Google Drive</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 10px;
+      margin: 0;
+    }
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      margin: auto;
+      aspect-ratio: 16/9; /* biar tetap proporsional */
+    }
+    .video-container iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
-<body class="p-4 sm:p-6 md:p-8">
-    <div class="container bg-white rounded-2xl shadow-xl p-8 sm:p-10 md:p-12 text-center max-w-lg w-full border-4 border-green-500 animate-fade-in">
-        <!-- Bagian Header -->
-        <div class="header mb-8">
-            <h1 class="text-green-600 text-5xl sm:text-6xl font-extrabold uppercase tracking-wide">
-                USD KAGET! 💸
-            </h1>
-            <p class="text-gray-600 text-lg mt-3">
-                Klik tombol di bawah untuk mencoba keberuntungan Anda!
-            </p>
-        </div>
-
-        <!-- Bagian Tampilan Nominal -->
-        <div class="amount-display bg-green-50 border border-dashed border-green-400 rounded-xl p-6 sm:p-8 mb-8">
-            <span class="label block text-xl text-gray-700 mb-2">Potensi USD Kaget Anda:</span>
-            <span id="usdAmount" class="amount block text-6xl sm:text-7xl font-bold text-green-800 transition-all duration-300">$XX.XX</span>
-        </div>
-
-        <!-- Area Tombol -->
-        <div class="button-area mt-8">
-            <button id="claimButton" class="gradient-button py-4 px-8 text-2xl font-bold rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 transform transition-transform duration-200 hover:scale-105 active:scale-95">
-                AMBIL USD KAGET SEKARANG!
-            </button>
-        </div>
-
-        <!-- Catatan Kaki -->
-        <div class="footer-note mt-6 text-gray-500 text-base">
-            <p>Anda mungkin beruntung hari ini!</p>
-        </div>
-    </div>
-
-    <!-- Modal (Message Box) untuk pesan -->
-    <div id="messageModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="closeModalButton">&times;</span>
-            <p id="modalMessage" class="text-xl font-semibold text-gray-800"></p>
-            <button id="modalOkButton" class="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Oke</button>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const amountElement = document.getElementById('usdAmount');
-            const claimButton = document.getElementById('claimButton');
-            const messageModal = document.getElementById('messageModal');
-            const modalMessage = document.getElementById('modalMessage');
-            const closeModalButton = document.getElementById('closeModalButton');
-            const modalOkButton = document.getElementById('modalOkButton');
-
-            // Fungsi untuk menampilkan modal pesan
-            function showMessageModal(message) {
-                modalMessage.textContent = message;
-                messageModal.style.display = 'flex'; // Mengubah display menjadi flex untuk centering
-            }
-
-            // Fungsi untuk menyembunyikan modal pesan
-            function hideMessageModal() {
-                messageModal.style.display = 'none';
-            }
-
-            // Event listener untuk tombol klaim
-            claimButton.addEventListener('click', () => {
-                // Menambahkan efek shake pada tombol
-                claimButton.classList.add('shake');
-                setTimeout(() => {
-                    claimButton.classList.remove('shake');
-                }, 500); // Hapus kelas shake setelah animasi selesai
-
-                // Menghasilkan nominal USD acak antara 0.01 dan 10.00
-                const randomAmount = (Math.random() * 9.99 + 0.01).toFixed(2);
-                amountElement.textContent = `$${randomAmount}`;
-
-                // Menampilkan pesan selamat melalui modal kustom
-                showMessageModal(`Selamat! Anda mendapatkan USD Kaget sebesar $${randomAmount}!`);
-            });
-
-            // Event listener untuk tombol tutup modal
-            closeModalButton.addEventListener('click', hideMessageModal);
-            modalOkButton.addEventListener('click', hideMessageModal);
-
-            // Menutup modal jika user mengklik di luar area modal content
-            window.addEventListener('click', (event) => {
-                if (event.target == messageModal) {
-                    hideMessageModal();
-                }
-            });
-        });
-    </script>
+<body>
+  <h2>Video Google Drive</h2>
+  <div class="video-container">
+    <iframe src="https://drive.google.com/file/d/1didUwbUvqXCooG-jkoMro1YYOf-lywGx/view?usp=drivesdk" allow="autoplay"></iframe>
+  </div>
 </body>
 </html>
